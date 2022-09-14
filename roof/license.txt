@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old Roof Sheet
+* source:	https://sketchfab.com/3d-models/old-roof-sheet-121cf54fd4f3418f9386f69c083efbd5
+* author:	Thunder (https://sketchfab.com/thunderpwn)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old Roof Sheet" (https://sketchfab.com/3d-models/old-roof-sheet-121cf54fd4f3418f9386f69c083efbd5) by Thunder (https://sketchfab.com/thunderpwn) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Snowboard used boot
+* source:	https://sketchfab.com/3d-models/snowboard-used-boot-a25c0e9d4d8841b08ba0e6abdcb9e91a
+* author:	xavitrenchs (https://sketchfab.com/xavitrenchs)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Snowboard used boot" (https://sketchfab.com/3d-models/snowboard-used-boot-a25c0e9d4d8841b08ba0e6abdcb9e91a) by xavitrenchs (https://sketchfab.com/xavitrenchs) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Intermediate Advanced Snowboard
+* source:	https://sketchfab.com/3d-models/intermediate-advanced-snowboard-267e04a025434d7d8587ec2ee60ad62e
+* author:	Final Render Animation Studio (https://sketchfab.com/cleowillo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Intermediate Advanced Snowboard" (https://sketchfab.com/3d-models/intermediate-advanced-snowboard-267e04a025434d7d8587ec2ee60ad62e) by Final Render Animation Studio (https://sketchfab.com/cleowillo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
