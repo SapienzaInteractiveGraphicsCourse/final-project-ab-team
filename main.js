@@ -15,14 +15,21 @@ document.body.appendChild(renderer.domElement);
 const light = new THREE.AmbientLight(0x404040, 8); // soft white light
 scene.add(light);
 scene.background = new THREE.Color(0x87ceeb );
-
-
-
-
 camera.position.y = 3
 camera.position.z = 5;
 
 
+var flag0 = true;
+var flag1 = true;
+var flag2 = true;
+var flag3 = true;
+var flag4 = true;
+var flag5 = true;
+var flag6 = true;
+var flag7 = true;
+var generalFlag = true;
+var sumBalls = 0;
+var flagHouseAnimation = false;
 //sky
 
 var sky = new THREE.Sky();
@@ -56,29 +63,124 @@ scene.add(sky);
 
 
 
-const controls = new OrbitControls( camera, renderer.domElement );
 
-
+var number = 0;
+var signX;
+var signY;
+var flagSignX;
+var flagSignY;
+var Cordinates = new Array();
+var Objects = new Array();
+var Cordinates_x;
+var Cordinates_y;
+while (number < 8) {
+  const geometry = new THREE.SphereGeometry(0.1, 20, 20, 20, 20, 20, 20);
+  const texture = new THREE.TextureLoader().load("textures/snowstar.jpg");
+  const material = new THREE.MeshBasicMaterial({ map: texture, color: 0xe0ffff });
+  const snowball = new THREE.Mesh(geometry, material);
+  flagSignX = Math.random();
+  if (flagSignX >= 0.5) {
+    signX = 1;
+  } else {
+    signX = -1;
+  }
+  flagSignY = Math.random();
+  if (flagSignY >= 0.5) {
+    signY = 1;
+  } else {
+    signY = -1;
+  }
+  Cordinates_x = Math.random() * 10 * signX;
+  Cordinates_y = Math.random() * 10 * signY;
+  Cordinates.push((Cordinates_x, 0, Cordinates_y));
+  Objects.push(snowball);
+  snowball.position.set(Cordinates_x, 0, Cordinates_y);
+  scene.add(snowball);
+  number = number + 1;
+}
 
 
 //Floor
 
-const geometryFloor = new THREE.BoxGeometry(1500, 0.5, 1500);
-const material2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const geometryFloor = new THREE.BoxGeometry(200, 0.5, 200);
+const textureFloor = new THREE.TextureLoader().load(
+  "textures/snow.jpg"
+);
+
+const material2 = new THREE.MeshBasicMaterial({ map: textureFloor});//0xffffff });
 const floor = new THREE.Mesh(geometryFloor, material2);
 floor.position.y = -0.6;
 scene.add(floor);
 
+let particles;
+let positions = [], velocities = [];
 
-/*const geometry = new THREE.BoxGeometry(0.3,0.5,0.2);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff });
-const cube = new THREE.Mesh(geometry, material);
-cube.position.z= 0.3;
-scene.add(cube);*/
+const numSnowflakes = 15000;
+
+const maxRange = 100, minRange= maxRange / 2;
+const minHeight = 15;
+
+const geometry = new THREE.BufferGeometry();
+const textureLoaderSF = new THREE.TextureLoader();
+
+
+
+
+addSnowFlakes();
+
+function addSnowFlakes(){
+
+    for(let i = 0; i<numSnowflakes; i++){
+        positions.push(
+            Math.floor( Math.random() * maxRange - minRange),
+            Math.floor( Math.random() * minRange + minHeight),
+            Math.floor( Math.random() * maxRange - minRange)
+        );
+  
+        velocities.push(
+            Math.floor( Math.random() * 6 - 3) * 0.01,
+            Math.floor( Math.random() * 5 + 0.12 ) * 0.018,
+            Math.floor( Math.random() * 6 - 3) * 0.01,
+        );
+        }
+  
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+        geometry.setAttribute('velocity', new THREE.Float32BufferAttribute(velocities,3));
+  
+        const flakeMaterial = new THREE.PointsMaterial({
+            size : 0.5,
+            map: textureLoaderSF.load("textures/snowing.png"),
+            blending: THREE.AdditiveBlending,
+            depthTest : false,
+            transparent: true,
+            opacity : 0.8
+  
+        });
+        particles = new THREE.Points(geometry, flakeMaterial);
+        scene.add(particles);
+  
+  }
+  function updateParticles(){
+   
+    for(let i=0; i < numSnowflakes; i += 3){
+        particles.geometry.attributes.position.array[i] -= particles.geometry.attributes.velocity.array[i];
+        particles.geometry.attributes.position.array[i+1] -= particles.geometry.attributes.velocity.array[i+1];
+        particles.geometry.attributes.position.array[i+2] -= particles.geometry.attributes.velocity.array[i+2];
+  
+        if(particles.geometry.attributes.position.array[i+1] < 0 ){
+            particles.geometry.attributes.position.array[i] = Math.floor(Math.random() * maxRange - minRange );
+            particles.geometry.attributes.position.array[i+1] = Math.floor(Math.random() * maxRange + minHeight );
+            particles.geometry.attributes.position.array[i+2] = Math.floor(Math.random() * maxRange - minRange );
+        }
+  
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
+  }
 
 
 let loader = new THREE.GLTFLoader();
 var pg;
+var flagPg = false;
 var ObjectsPg = new Array();
 loader.load("scene.gltf", function(gltf){
   pg = gltf.scene;
@@ -86,49 +188,400 @@ loader.load("scene.gltf", function(gltf){
   //pg.scale.x = 0.2;
   //pg.scale.y = 0.2;
   //pg.scale.z = 0.2;
+ // pg.rotation.y -= Math.PI / 2;
   scene.add(gltf.scene);
-
-
-
-
-
-
-
-
-
-
-
-})
-
+  flagPg = true;
+});
 /*
-let loader1 = new THREE.GLTFLoader();
-var boot;
-loader1.load("snowboots/scene.gltf", function(gltf){
-  boot = gltf.scene;
-  boot.position.y -= 0.25;
-  boot.position.z += 0.3;
-  boot.scale.x = 7;
-  boot.scale.y = 7;
-  boot.scale.z = 7;
-  scene.add(gltf.scene);
-})
+  let loader1 = new THREE.GLTFLoader();
+  var boot;
+  loader1.load("snowboots/scene.gltf", function(gltf){
+    boot = gltf.scene;
+    boot.position.y += 0.03;
+    boot.position.z += 0.2;
+    boot.scale.x = 5;
+    boot.scale.y = 5;
+    boot.scale.z = 5;
+    pg.add(gltf.scene);
+  })
+  
+  let loader2 = new THREE.GLTFLoader();
+  var boot2;
+  loader2.load("snowboots/scene.gltf", function(gltf){
+    boot2 = gltf.scene;
+    boot2.position.y += 0.03;
+    boot2.position.z -= 0.2;
+    boot2.scale.x = 5;
+    boot2.scale.y = 5;
+    boot2.scale.z = 5;
+    pg.add(gltf.scene);
+  })
 
-let loader2 = new THREE.GLTFLoader();
-var boot2;
-loader2.load("snowboots/scene.gltf", function(gltf){
-  boot2 = gltf.scene;
-  boot2.position.y -= 0.25;
-  boot2.position.z -= 0.3;
-  boot2.scale.x = 7;
-  boot2.scale.y = 7;
-  boot2.scale.z = 7;
-  scene.add(gltf.scene);
-})
+    //Head
+    const geometryHead = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+    const textureHead = new THREE.TextureLoader().load(
+      "textures/hat2.jpg"
+    );
+     const materialHead = new THREE.MeshBasicMaterial({ map: textureHead });
+     const head = new THREE.Mesh(geometryHead, materialHead);
+     head.position.y += 1.9;
+     head.position.x -= 0.25;
+     //head.rotation.y += Math.PI / 2;
+     //head.rotation.z += Math.PI / 2;
+    ObjectsPg.push(head);
+    pg.add(head);
+//FaceTexture
+const geometryFaceTexture = new THREE.PlaneGeometry(0.3, 0.3);
+const textureFaceTexture = new THREE.TextureLoader().load(
+  "textures/face2.jpg"
+);
 
+const materialFaceTexture = new THREE.MeshBasicMaterial({
+  map: textureFaceTexture,
+});
+const FaceTexture = new THREE.Mesh(
+  geometryFaceTexture,
+  materialFaceTexture
+);
+
+
+    FaceTexture.position.y += 1.9;
+    FaceTexture.position.x -= 0.402;
+    FaceTexture.rotation.y -= Math.PI / 2;
+pg.add(FaceTexture);
+//fur
+const geometry = new THREE.SphereGeometry(0.03, 20, 20, 20, 20, 20, 20);
+  const texture = new THREE.TextureLoader().load("textures/hat fur.jpg");
+  const material = new THREE.MeshBasicMaterial({ map: texture, color: 0x006400 });
+  const sphere = new THREE.Mesh(geometry, material);
+  //Objects.push(sphere);
+  //sphere.position.set(Cordinates_x, 0, Cordinates_y);
+  sphere.position.x -= 0.23;
+  sphere.position.y += 2.1;
+  pg.add(sphere);
+//Glasses
+const geometryGlasses = new THREE.PlaneGeometry(0.3, 0.3);
+const textureGlasses = new THREE.TextureLoader().load(
+  "textures/glasses.jpg"
+);
+
+const materialGlasses = new THREE.MeshBasicMaterial({
+  map: textureGlasses,
+});
+const Glasses = new THREE.Mesh(
+  geometryGlasses,
+  materialGlasses
+);
+    Glasses.scale.y = 0.33;
+    
+    Glasses.position.y += 1.95;
+    Glasses.position.x -= 0.41;
+    Glasses.rotation.y -= Math.PI / 2;
+pg.add(Glasses);
+    //Body
+    const geometryBody = new THREE.BoxGeometry(0.4, 0.75, 0.7);
+    const textureBody = new THREE.TextureLoader().load(
+      "textures/snowjacket2.jpg"
+    );
+    const materialBody = new THREE.MeshBasicMaterial({ map: textureBody, color: 0xffffff });
+    const body = new THREE.Mesh(geometryBody, materialBody);
+    body.position.y += 1.5;
+    body.position.x += 0.13;
+    //body.rotation.y += Math.PI / 2;
+    body.rotation.z += 1/8 * Math.PI ;
+    ObjectsPg.push(body);
+    pg.add(body);
+
+    //UpperLeftArm
+    const geometryUpperLeftArm = new THREE.BoxGeometry(0.1, 0.28, 0.07);
+    const textureUpperLeftArm = new THREE.TextureLoader().load(
+      "textures/snowjacket2.jpg"
+    );
+    const materialUpperLeftArm = new THREE.MeshBasicMaterial({
+      map: textureUpperLeftArm,
+    });
+    const UpperLeftArm = new THREE.Mesh(
+      geometryUpperLeftArm,
+      materialUpperLeftArm
+    );
+  
+    UpperLeftArm.position.y += 1.65;
+    UpperLeftArm.position.x -= 0.2;
+    UpperLeftArm.position.z += 0.49;
+  //   UpperLeftArm.position.y += 1.6;
+  //   UpperLeftArm.position.x += 0.35;
+  //   UpperLeftArm.rotation.x -= 0.1;
+  //   UpperLeftArm.rotation.z -= 0.1;
+  //   UpperLeftArm.position.x += 0.03;
+ 
+    UpperLeftArm.rotation.z += 1/4 * Math.PI  ;
+   UpperLeftArm.rotation.x += Math.PI / 2;
+   
+    ObjectsPg.push(UpperLeftArm);
+    pg.add(UpperLeftArm);
+
+    //UpperRightArm
+    const geometryUpperRightArm = new THREE.BoxGeometry(0.1, 0.28, 0.07);
+    const textureUpperRightArm = new THREE.TextureLoader().load(
+      "textures/snowjacket2.jpg"
+    );
+    const materialUpperRightArm = new THREE.MeshBasicMaterial({
+      map: textureUpperRightArm,
+    });
+    const UpperRightArm = new THREE.Mesh(
+      geometryUpperRightArm,
+      materialUpperRightArm
+    );
+    UpperRightArm.position.y += 1.65;
+    UpperRightArm.position.x -= 0.2;
+    UpperRightArm.position.z -= 0.49;
+
+    // UpperRightArm.position.y += 1.6;
+    // UpperRightArm.position.x += 0.35;
+    // UpperRightArm.rotation.x -= 0.1;
+    // UpperRightArm.rotation.z += 0.6;
+    // UpperRightArm.position.x += 0.03;
+    // UpperRightArm.position.x -= 0.77;
+
+    // UpperRightArm.rotation.y -= Math.PI ;
+    // //UpperRightArm.rotation.z += Math.PI ;
+    UpperRightArm.rotation.z -= 1/4 * Math.PI  ;
+   UpperRightArm.rotation.x += Math.PI / 2;
+  
+    ObjectsPg.push(UpperRightArm);
+    pg.add(UpperRightArm);
+
+    
+    //LowerLeftArm
+    const geometryLowerLeftArm = new THREE.BoxGeometry(0.08, 0.35, 0.07);
+    const textureLowerLeftArm = new THREE.TextureLoader().load(
+      "textures/snowjacket2.jpg"
+    );
+    const materialLowerLeftArm = new THREE.MeshBasicMaterial({
+      map: textureLowerLeftArm,
+    });
+    const LowerLeftArm = new THREE.Mesh(
+      geometryLowerLeftArm,
+      materialLowerLeftArm
+    );
+  
+    LowerLeftArm.position.y += 1.65;
+    LowerLeftArm.position.x -= 0.44;
+    LowerLeftArm.position.z += 0.58;
+  //   UpperLeftArm.position.y += 1.6;
+  //   UpperLeftArm.position.x += 0.35;
+  //   UpperLeftArm.rotation.x -= 0.1;
+  //   UpperLeftArm.rotation.z -= 0.1;
+  //   UpperLeftArm.position.x += 0.03;
+ 
+   // LowerLeftArm.rotation.z += 1/4 * Math.PI  ;
+   LowerLeftArm.rotation.z += Math.PI / 2;
+   
+    ObjectsPg.push(LowerLeftArm);
+    pg.add(LowerLeftArm);
+
+    //LowerRightArm
+const geometryLowerRightArm = new THREE.BoxGeometry(0.08, 0.35, 0.07);
+const textureLowerRightArm = new THREE.TextureLoader().load(
+  "textures/snowjacket2.jpg"
+);
+const materialLowerRightArm = new THREE.MeshBasicMaterial({
+  map: textureLowerRightArm,
+});
+const LowerRightArm = new THREE.Mesh(
+  geometryLowerRightArm,
+  materialLowerRightArm
+);
+
+LowerRightArm.position.y += 1.65;
+LowerRightArm.position.x -= 0.44;
+LowerRightArm.position.z -= 0.58;
+//   UpperLeftArm.position.y += 1.6;
+//   UpperLeftArm.position.x += 0.35;
+//   UpperLeftArm.rotation.x -= 0.1;
+//   UpperLeftArm.rotation.z -= 0.1;
+//   UpperLeftArm.position.x += 0.03;
+
+// LowerRightArm.rotation.z += 1/4 * Math.PI  ;
+LowerRightArm.rotation.z += Math.PI / 2;
+
+ObjectsPg.push(LowerRightArm);
+pg.add(LowerRightArm);
+
+
+
+let loaderHand = new THREE.GLTFLoader();
+  var LeftHand;
+  loaderHand.load("hand/scene.gltf", function(gltf){
+    LeftHand = gltf.scene;
+  
+    LeftHand.position.y += 1.65;
+    LeftHand.position.x -= 0.69;
+    LeftHand.position.z += 0.58;
+    LeftHand.scale.x = 0.04;
+    LeftHand.scale.y = 0.04;
+    LeftHand.scale.z = 0.04;
+    LeftHand.rotation.z += Math.PI / 2;
+    LeftHand.rotation.x -= Math.PI / 2;
+    pg.add(gltf.scene);
+  })
+  let loaderHand2 = new THREE.GLTFLoader();
+  var RightHand;
+  loaderHand2.load("hand/scene.gltf", function(gltf){
+    RightHand = gltf.scene;
+    RightHand.position.y += 1.65;
+    RightHand.position.x -= 0.69;
+    RightHand.position.z -= 0.58;
+    RightHand.scale.x = 0.04;
+    RightHand.scale.y = 0.04;
+    RightHand.scale.z = 0.04;
+    RightHand.rotation.z += Math.PI / 2;
+    RightHand.rotation.x += Math.PI / 2;
+    pg.add(gltf.scene);
+  })
+ //LeftHand
+const geometryLeftHand = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+const textureLeftHand = new THREE.TextureLoader().load(
+  "textures/HeadTexture.jpg"
+);
+const materialLeftHand = new THREE.MeshBasicMaterial({
+  map: textureLeftHand,
+});
+const LeftHand = new THREE.Mesh(
+  geometryLeftHand,
+  materialLeftHand
+);
+
+LeftHand.position.y += 1.65;
+LeftHand.position.x -= 0.6;
+LeftHand.position.z += 0.58;
+//   UpperLeftArm.position.y += 1.6;
+//   UpperLeftArm.position.x += 0.35;
+//   UpperLeftArm.rotation.x -= 0.1;
+//   UpperLeftArm.rotation.z -= 0.1;
+//   UpperLeftArm.position.x += 0.03;
+
+// LeftHand.rotation.z += 1/4 * Math.PI  ;
+LeftHand.rotation.z += Math.PI / 2;
+
+ObjectsPg.push(LeftHand);
+pg.add(LeftHand);
+
+//RightHand
+const geometryRightHand = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+const textureRightHand = new THREE.TextureLoader().load(
+  "textures/HeadTexture.jpg"
+);
+const materialRightHand = new THREE.MeshBasicMaterial({
+  map: textureRightHand,
+});
+const RightHand = new THREE.Mesh(
+  geometryRightHand,
+  materialRightHand
+);
+
+RightHand.position.y += 1.65;
+RightHand.position.x -= 0.6;
+RightHand.position.z -= 0.58;
+//   UpperLeftArm.position.y += 1.6;
+//   UpperLeftArm.position.x += 0.35;
+//   UpperLeftArm.rotation.x -= 0.1;
+//   UpperLeftArm.rotation.z -= 0.1;
+//   UpperLeftArm.position.x += 0.03;
+
+// RightHand.rotation.z += 1/4 * Math.PI  ;
+RightHand.rotation.z += Math.PI / 2;
+
+ObjectsPg.push(RightHand);
+pg.add(RightHand);
+
+
+//leg
+const geometryLeg = new THREE.BoxGeometry(0.45, 0.26, 0.6);
+const textureLeg = new THREE.TextureLoader().load(
+  "textures/snowjacket.jpg"
+);
+const materialLeg = new THREE.MeshBasicMaterial({ map: textureLeg, color:0x006400 });
+const Leg = new THREE.Mesh(geometryLeg, materialLeg);
+Leg.position.x += 0.3;
+Leg.position.y += 1;
+
+// Leg.rotation.y += Math.PI 
+// Leg.rotation.z += Math.PI;
+ObjectsPg.push(Leg);
+pg.add(Leg);
+
+    //upperLeftleg
+    const geometryUpperLeftLeg = new THREE.BoxGeometry(0.15, 0.4, 0.17);
+    const textureUpperLeftLeg = new THREE.TextureLoader().load(
+      "textures/snowjacket.jpg"
+    );
+    const materialUpperLeftLeg = new THREE.MeshBasicMaterial({ map: textureUpperLeftLeg, color:0x006400  });
+    const UpperLeftLeg = new THREE.Mesh(geometryUpperLeftLeg, materialUpperLeftLeg);
+    UpperLeftLeg.position.x += 0.12;
+    UpperLeftLeg.position.z += 0.2;
+    UpperLeftLeg.position.y += 0.8;
+
+    //UpperLeftLeg.rotation.y += Math.PI / 2;
+    UpperLeftLeg.rotation.z -=1/7 * Math.PI ;
+   // Leg.rotation.z += Math.PI / 2;
+    ObjectsPg.push(UpperLeftLeg);
+    pg.add(UpperLeftLeg);
+   
+   //upperRightleg
+   const geometryUpperRightLeg = new THREE.BoxGeometry(0.15, 0.4, 0.17);
+   const textureUpperRightLeg = new THREE.TextureLoader().load(
+    "textures/snowjacket2.jpg"
+   );
+   const materialUpperRightLeg = new THREE.MeshBasicMaterial({ map: textureUpperRightLeg, color:0x006400  });
+   const UpperRightLeg = new THREE.Mesh(geometryUpperRightLeg, materialUpperRightLeg);
+   UpperRightLeg.position.x += 0.12;
+   UpperRightLeg.position.z -= 0.2;
+   UpperRightLeg.position.y += 0.8;
+
+   UpperRightLeg.rotation.z -= 1/7 * Math.PI ;
+   //UpperRightLeg.rotation.y += Math.PI / 2;
+  // Leg.rotation.z += Math.PI / 2;
+   ObjectsPg.push(UpperRightLeg);
+   pg.add(UpperRightLeg);
+
+    //LowerLeftLeg
+    //leg
+    const geometryLowerLeftLeg = new THREE.BoxGeometry(0.09, 0.35, 0.14);
+    const textureLowerLeftLeg = new THREE.TextureLoader().load(
+      "textures/snowjacket2.jpg"
+    );
+    const materialLowerLeftLeg = new THREE.MeshBasicMaterial({ map: textureLowerLeftLeg, color:0x006400  });
+    const LowerLeftLeg = new THREE.Mesh(geometryLowerLeftLeg, materialLowerLeftLeg);
+      LowerLeftLeg.position.x += 0.05;
+      LowerLeftLeg.position.y += 0.5;
+      LowerLeftLeg.position.z += 0.2;
+      LowerLeftLeg.rotation.y += Math.PI / 2;
+   // Leg.rotation.z += Math.PI / 2;
+    ObjectsPg.push(LowerLeftLeg);
+    pg.add(LowerLeftLeg);
+
+//LowerRightLeg
+    //leg
+    const geometryLowerRightLeg = new THREE.BoxGeometry(0.09, 0.35, 0.14);
+    const textureLowerRightLeg = new THREE.TextureLoader().load(
+      "textures/snowjacket.jpg"
+    );
+    const materialLowerRightLeg = new THREE.MeshBasicMaterial({ map: textureLowerRightLeg, color:0x006400  });
+    const LowerRightLeg = new THREE.Mesh(geometryLowerRightLeg, materialLowerRightLeg);
+      LowerRightLeg.position.x += 0.05;
+      LowerRightLeg.position.y += 0.5;
+      LowerRightLeg.position.z -= 0.2;
+      LowerRightLeg.rotation.y += Math.PI / 2;
+   // Leg.rotation.z += Math.PI / 2;
+    ObjectsPg.push(LowerRightLeg);
+    pg.add(LowerRightLeg);
+
+    flagPg = true;
+
+})
 
 */
-  
-
 
 //House
 const geometryHouse = new THREE.BoxGeometry(15, 10, 15);
@@ -351,7 +804,7 @@ loaderSnowTrees3.load(
 
 
 
-/*
+
 var flagSnowMan;
 let loaderSnowMan = new THREE.GLTFLoader();
 var snowMan ;
@@ -360,9 +813,9 @@ loaderSnowMan.load(
   "snowman/scene.gltf",
   function(gltf) {
     snowMan = gltf.scene;
-    snowMan.rotation.y -= Math.PI / 1.3;
-    snowMan.position.x += 5;
-    snowMan.position.z -= 10;
+  snowMan.rotation.y -= Math.PI / 3;
+    snowMan.position.x -= 15;
+    snowMan.position.z -= 5;
     snowMan.scale.x = 5;
     snowMan.scale.y = 5;
     snowMan.scale.z = 5;
@@ -380,21 +833,21 @@ loaderSnowMan.load(
     function(gltf) {
       SnowMountain = gltf.scene;
       SnowMountain.rotation.y -= Math.PI / 2;
-      SnowMountain.position.x += 55;
-      SnowMountain.position.z -= 95;
+      SnowMountain.position.x += 30;
+      SnowMountain.position.z -= 80;
       SnowMountain.position.y -= 4;
-      SnowMountain.scale.x = 0.7;
-      SnowMountain.scale.y = 0.7;
-      SnowMountain.scale.z = 0.7;
+      SnowMountain.scale.x = 0.5;
+      SnowMountain.scale.y = 0.5;
+      SnowMountain.scale.z = 0.5;
   
       scene.add(SnowMountain);
       flagSnowMountain = true;
     });
-*/
+
 var flagScore;
 let loaderScore = new THREE.GLTFLoader();
 var Score;
-
+var ObjectsScore = new Array();
 loaderScore.load(
   "score/scene.gltf",
   function(gltf){
@@ -406,7 +859,7 @@ loaderScore.load(
     Score.position.x -= 8;
     Score.position.y -= 0.75;
     Score.position.z -= 22;
-
+    ObjectsScore.push(Score);
     scene.add(Score);
     flagScore = true;
     const geometryBoardPaper = new THREE.BoxGeometry(3.2, 1.8, 0.1);
@@ -424,7 +877,7 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
     BoardPaper.scale.x = 0.12;
     BoardPaper.scale.y = 0.12;
     BoardPaper.scale.z = 0.12;
-    ObjectsPg.push(BoardPaper);
+    ObjectsScore.push(BoardPaper);
     Score.add(BoardPaper);
 
     const loaderGeometry = new THREE.FontLoader();
@@ -433,10 +886,10 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
       "fonts/helvetiker_regular.typeface.json",
       function (font) {
         const geometryPaperText = new THREE.TextGeometry(
-          "TOTAL SNOWBALLS \n COLLECTED: 0",
+          "TOTAL SNOWBALLS \n COLLECTED:  0",
           {
             font: font,
-            size: 5,
+            size: 5.3,
             height: 1,
             curveSegments: 12,
             bevelEnabled: true,
@@ -450,7 +903,7 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
           "textures/BoardPaperTexture.jpg"
         );
         const materialPaperText = new THREE.MeshBasicMaterial({
-          color: 0xffa500,
+          color: 0x0000ff,
         });
         const PaperText = new THREE.Mesh(geometryPaperText, materialPaperText);
         ObjectsPg.push(PaperText);
@@ -459,7 +912,8 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
         PaperText.scale.z = 0.05;
         PaperText.position.y += 2.5;
         PaperText.position.z -= 21.6;
-        PaperText.position.x -= 9.5;
+        PaperText.position.x -= 9.6;
+        ObjectsScore.push(PaperText);
         scene.add(PaperText);
       }
     );
@@ -470,9 +924,523 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
   }
 );
 
+//controls
+
+const controls = new OrbitControls(camera, renderer.domElement);
+
+controls.screenSpacePanning = false;
+
+controls.minDistance = 2;
+controls.maxDistance = 10;
+controls.maxPolarAngle = Math.PI / 2;
+controls.keys = false;
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+camera.position.z = 6;
+
+controls.update();
+document.body.addEventListener("keydown", keyPressed);
+var indiceappoggio = 0;
+var direzione = 0;
+var firstObj;
+var secondObj;
+
+function keyPressed(e) {
+  if (flagPg) {
+    controls.target = pg.position;
+
+    switch (e.key) {
+      case "ArrowUp":
+        firstObj = new THREE.Box3().setFromObject(pg);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees1);
+
+        var crash = firstObj.intersectsBox(secondObj);
+
+       secondObj = new THREE.Box3().setFromObject(Score);
+
+        var crash1 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(House);
+
+        var crash2 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(HouseCart);
+
+        var crash3 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees2);
+
+        var crash4 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees3);
+
+        var crash5 = firstObj.intersectsBox(secondObj);
+
+        
+        secondObj = new THREE.Box3().setFromObject(SnowMountain);
+
+        var crash6 = firstObj.intersectsBox(secondObj);
+
+        
+        if (!crash && !crash1 && !crash2 && !crash3 && !crash4 && !crash5 && !crash6)  {
+          if (direzione == 0) {
+            pg.position.z -= 0.1;
+            camera.position.z -= 0.1;
+          }
+          if (direzione == -1) {
+            pg.position.x += 0.1;
+            camera.position.x += 0.1;
+          }
+          if (direzione == -2) {
+            pg.position.z += 0.1;
+            camera.position.z += 0.1;
+          }
+          if (direzione == -3) {
+            pg.position.x -= 0.1;
+            camera.position.x -= 0.1;
+          }
+
+          if (direzione == 1) {
+            pg.position.x -= 0.1;
+            camera.position.x -= 0.1;
+          }
+          if (direzione == 2) {
+            pg.position.z += 0.1;
+            camera.position.z += 0.1;
+          }
+          if (direzione == 3) {
+            pg.position.x += 0.1;
+            camera.position.x += 0.1;
+          }
+        }
+        break;
+        
+      case "ArrowDown":
+        firstObj = new THREE.Box3().setFromObject(pg);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees1);
+
+        var crash = firstObj.intersectsBox(secondObj);
+
+       secondObj = new THREE.Box3().setFromObject(Score);
+
+        var crash1 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(House);
+
+        var crash2 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(HouseCart);
+
+        var crash3 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees2);
+
+        var crash4 = firstObj.intersectsBox(secondObj);
+
+        secondObj = new THREE.Box3().setFromObject(SnowTrees3);
+
+        var crash5 = firstObj.intersectsBox(secondObj);
+
+        
+        secondObj = new THREE.Box3().setFromObject(SnowMountain);
+
+        var crash6 = firstObj.intersectsBox(secondObj);
+        if (!crash && !crash1 && !crash2 && !crash3 && !crash4 && !crash5 && !crash6) {
+          if (direzione == 0) {
+            pg.position.z += 0.1;
+            camera.position.z += 0.1;
+          }
+          if (direzione == -1) {
+            pg.position.x -= 0.1;
+            camera.position.x -= 0.1;
+          }
+          if (direzione == -2) {
+            pg.position.z -= 0.1;
+            camera.position.z -= 0.1;
+          }
+          if (direzione == -3) {
+            pg.position.x += 0.1;
+            camera.position.x += 0.1;
+          }
+
+          if (direzione == 1) {
+            pg.position.x += 0.1;
+            camera.position.x += 0.1;
+          }
+          if (direzione == 2) {
+            pg.position.z -= 0.1;
+            camera.position.z -= 0.1;
+          }
+          if (direzione == 3) {
+            pg.position.x -= 0.1;
+            camera.position.x -= 0.1;
+          }
+        }
+
+        break;
+      case "ArrowLeft":
+        direzione += 1;
+        if (direzione == 4) {
+          direzione = 0;
+        }
+        pg.rotation.y += Math.PI / 2;
+
+        //camera.position.x-=0.1;
+
+        break;
+      case "ArrowRight":
+        direzione -= 1;
+        if (direzione == -4) {
+          direzione = 0;
+        }
+        pg.rotation.y -= Math.PI / 2;
+        //camera.position.x+=0.1;
+
+        break;
+    }
+    e.preventDefault();
+  }
+}
+
+
+
+var indexarraysphere = 0;
 const animate = function () {
   requestAnimationFrame(animate);
- 
+  for (
+    indexarraysphere = 0;
+    indexarraysphere < Objects.length;
+    indexarraysphere++
+  ) {
+    Objects[indexarraysphere].rotation.y += 0.02;
+  }
+if (generalFlag && flagPg) {
+  const loaderGeometryFont = new THREE.FontLoader();
+  if (flag0) {
+    var xDif = pg.position.x - Objects[0].position.x;
+    var yDif = pg.position.z - Objects[0].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[0]);
+
+      sumBalls += 1;
+      flag0 = false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag1) {
+    var xDif = pg.position.x - Objects[1].position.x;
+    var yDif = pg.position.z - Objects[1].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[1]);
+
+      sumBalls += 1;
+      flag1 = false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag2) {
+    var xDif = pg.position.x - Objects[2].position.x;
+    var yDif = pg.position.z - Objects[2].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[2]);
+     
+
+      sumBalls += 1;
+      flag2= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag3) {
+    var xDif = pg.position.x - Objects[3].position.x;
+    var yDif = pg.position.z - Objects[3].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[3]);
+
+      sumBalls += 1;
+      flag3= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag4) {
+    var xDif = pg.position.x - Objects[4].position.x;
+    var yDif = pg.position.z - Objects[4].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[4]);
+
+      sumBalls += 1;
+      flag4= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag5) {
+    var xDif = pg.position.x - Objects[5].position.x;
+    var yDif = pg.position.z - Objects[5].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[5]);
+
+      sumBalls += 1;
+      flag5= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag6) {
+    var xDif = pg.position.x - Objects[6].position.x;
+    var yDif = pg.position.z - Objects[6].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[6]);
+
+      sumBalls += 1;
+      flag6= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+  if (flag7) {
+    var xDif = pg.position.x - Objects[7].position.x;
+    var yDif = pg.position.z - Objects[7].position.z;
+    if (yDif < 1 && yDif > -1 && xDif < 1 && xDif > -1) {
+      scene.remove(Objects[7]);
+
+      sumBalls += 1;
+      flag7= false;
+      var stringa = String(sumBalls);
+      loaderGeometryFont.load(
+        "fonts/helvetiker_regular.typeface.json",
+        function (font) {
+          ObjectsScore[2].geometry = new THREE.TextGeometry(
+            "TOTAL SNOWBALLS \n COLLECTED: " + stringa,
+            {
+              font: font,
+            size: 5.3,
+            height: 1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 1,
+            bevelSize: 0.2,
+            bevelOffset: 0,
+            bevelSegments: 3,
+            }
+          );
+
+          scene.add(ObjectsScore[2]);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+}
+//keydown();
+if (flagSnowMan) {
+  if (sumBalls ==1 && generalFlag == true) {
+    House.rotation.y += 0.06;
+    controls.target.x = -5;
+    controls.target.z = -5;
+
+    controls.update();
+    if (House.rotation.y > 12) {
+      scene.remove(House);
+      flagHouseAnimation = true;
+    }
+    if (flagHouseAnimation == true) {
+      // controls.target.x = 6;
+      // controls.target.y = 1;
+      // controls.target.z = -17;
+      // controls.update();
+      snowMan.position.y += 0.01;
+      // if (camera.position.z < 7) {
+      //   camera.position.z += 0.02;
+      // }
+      // camera.position.y += 0.005;
+    }
+  } 
+
+}
+controls.update();
+
+
+   updateParticles();
+
   renderer.render(scene, camera);
 }
 animate();

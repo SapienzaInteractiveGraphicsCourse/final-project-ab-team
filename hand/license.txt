@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lowpoly Glove (Rigged)
+* source:	https://sketchfab.com/3d-models/lowpoly-glove-rigged-4426fdf19d8247c99fe1e94c59a2a2c2
+* author:	Andrewociones (https://sketchfab.com/Andrewociones)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lowpoly Glove (Rigged)" (https://sketchfab.com/3d-models/lowpoly-glove-rigged-4426fdf19d8247c99fe1e94c59a2a2c2) by Andrewociones (https://sketchfab.com/Andrewociones) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
