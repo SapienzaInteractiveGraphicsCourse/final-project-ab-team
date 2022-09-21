@@ -792,8 +792,8 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
 
 //oldsnowman1
 const geometryOldSnowMan = new THREE.SphereGeometry(0.8, 20, 20, 20, 20, 20, 20);
-  const textureOldSnowMan = new THREE.TextureLoader().load("textures/snow.jpg");
-  const materialOldSnowMan = new THREE.MeshBasicMaterial({ map: textureOldSnowMan, color: 0xe0ffff });
+  const textureOldSnowMan = new THREE.TextureLoader().load("textures/snowstar.jpg");
+  const materialOldSnowMan = new THREE.MeshBasicMaterial({ map: textureOldSnowMan, color: 0xffffff });
   const OldSnowMan = new THREE.Mesh(geometryOldSnowMan, materialOldSnowMan);
   OldSnowMan.position.x -= 15;
   OldSnowMan.position.z -= 5;
@@ -802,8 +802,8 @@ const geometryOldSnowMan = new THREE.SphereGeometry(0.8, 20, 20, 20, 20, 20, 20)
 
 //oldsnowman2  
   const geometryOldSnowMan1 = new THREE.SphereGeometry(0.5, 20, 20, 20, 20, 20, 20);
-  const textureOldSnowMan1 = new THREE.TextureLoader().load("textures/snow.jpg");
-  const materialOldSnowMan1 = new THREE.MeshBasicMaterial({ map: textureOldSnowMan1, color: 0xe0ffff });
+  const textureOldSnowMan1 = new THREE.TextureLoader().load("textures/snowstar.jpg");
+  const materialOldSnowMan1 = new THREE.MeshBasicMaterial({ map: textureOldSnowMan1, color: 0xffffff });
   const OldSnowMan1 = new THREE.Mesh(geometryOldSnowMan1, materialOldSnowMan1);
   OldSnowMan1.position.x -= 15;
   OldSnowMan1.position.z -= 5;
@@ -1272,7 +1272,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: %",
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: 100%",
             {
               font: font,
             size: 5.3,
@@ -1296,7 +1296,7 @@ if (generalFlag && flagPg) {
   }
 
 }
-//keydown();
+
 if (flagSnowMan) {
   if(sumBalls == 80 ){
     particles.visible = true;
@@ -1304,7 +1304,7 @@ if (flagSnowMan) {
   if (generalFlag == true) {
     OldSnowMan.rotation.y += 0.025;
     OldSnowMan1.rotation.y += 0.025;
-    controls.target.x = -10;
+    controls.target.x = -8;
     controls.target.z = -7;
     controls.update();
      if (OldSnowMan.rotation.y > 12 && OldSnowMan1.rotation.y > 12) {
