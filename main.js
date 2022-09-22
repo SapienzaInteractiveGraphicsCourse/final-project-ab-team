@@ -8,7 +8,19 @@ const camera = new THREE.PerspectiveCamera(
 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+// let btn = document.createElement("button");
+
+// btn.innerHTML = "Subscribe";
+
+// btn.onclick = function () {
+
+// alert("Button is clicked");
+
+// };
+// document.body.appendChild(btn);
+
 document.body.appendChild(renderer.domElement);
+
 const light = new THREE.AmbientLight(0x404040, 8); 
 scene.add(light);
 scene.background = new THREE.Color(0x87ceeb );
@@ -61,8 +73,8 @@ scene.add(sky);
 var number = 0;
 var signX;
 var signY;
-var flagSignX;
-var flagSignY;
+var flagX;
+var flagY;
 var Cordinates = new Array();
 var Objects = new Array();
 var Cordinates_x;
@@ -72,14 +84,14 @@ while (number < 8) {
   const texture = new THREE.TextureLoader().load("textures/snowstar.jpg");
   const material = new THREE.MeshBasicMaterial({ map: texture, color: 0xe0ffff });
   const snowball = new THREE.Mesh(geometry, material);
-  flagSignX = Math.random();
-  if (flagSignX >= 0.5) {
+  flagX = Math.random();
+  if (flagX >= 0.5) {
     signX = 1;
   } else {
     signX = -1;
   }
-  flagSignY = Math.random();
-  if (flagSignY >= 0.5) {
+  flagY = Math.random();
+  if (flagY >= 0.5) {
     signY = 1;
   } else {
     signY = -1;
@@ -116,10 +128,7 @@ const minHeight = 15;
 const geometry = new THREE.BufferGeometry();
 const textureLoaderSF = new THREE.TextureLoader();
 
-
-
 addSnowFlakes();
-
 
 function addSnowFlakes(){
 
@@ -752,19 +761,7 @@ const BoardPaper = new THREE.Mesh(geometryBoardPaper, materialBoardPaper);
       "fonts/helvetiker_regular.typeface.json",
       function (font) {
         const geometryPaperText = new THREE.TextGeometry(
-          "SNOWMAN \n PERCENTAGE \n COMPLETED:  0%",
-          {
-            font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-          }
-        );
+          "SNOWMAN \n PERCENTAGE \n COMPLETED:  0%", {font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
         const texturePaperText = new THREE.TextureLoader().load(
           "textures/BoardPaperTexture.jpg"
         );
@@ -1034,19 +1031,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1068,19 +1053,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1102,19 +1075,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + " %" ,
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + " %" ,{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1136,19 +1097,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1170,19 +1119,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1204,19 +1141,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1238,19 +1163,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: " + stringa + "%",{ font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1272,19 +1185,7 @@ if (generalFlag && flagPg) {
         "fonts/helvetiker_regular.typeface.json",
         function (font) {
           ObjectsScore[2].geometry = new THREE.TextGeometry(
-            "SNOWMAN \n PERCENTAGE \n COMPLETED: 100%",
-            {
-              font: font,
-            size: 5.3,
-            height: 1,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 0.2,
-            bevelOffset: 0,
-            bevelSegments: 3,
-            }
-          );
+            "SNOWMAN \n PERCENTAGE \n COMPLETED: 100%",{font: font,size: 5.3,height: 1, curveSegments: 12,bevelEnabled: true,bevelThickness: 1,bevelSize: 0.2,bevelOffset: 0,bevelSegments: 3});
           scene.add(ObjectsScore[2]);
         },
         undefined,
@@ -1301,16 +1202,16 @@ if (flagSnowMan) {
   if(sumBalls == 80 ){
     particles.visible = true;
     updateParticles();
+    alert("It is starting to snow!")
   if (generalFlag == true) {
-    OldSnowMan.rotation.y += 0.025;
-    OldSnowMan1.rotation.y += 0.025;
+    OldSnowMan.rotation.y += 0.027;
+    OldSnowMan1.rotation.y += 0.027;
     controls.target.x = -8;
     controls.target.z = -7;
     controls.update();
      if (OldSnowMan.rotation.y > 12 && OldSnowMan1.rotation.y > 12) {
       scene.remove(OldSnowMan);
       scene.remove(OldSnowMan1);
-      updateParticles();
       flagAnimation = true;
     }
     if(flagAnimation == true && snowMan.position.y < -0.3 ){
