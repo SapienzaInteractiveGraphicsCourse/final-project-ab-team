@@ -501,7 +501,7 @@ var flagHouseDoor = false;
 let loaderHouseDoor = new THREE.GLTFLoader();
 var HouseDoor;
 loaderHouseDoor.load(
-  "Door/scene.gltf",
+  "door/scene.gltf",
   function (gltf) {
     HouseDoor = gltf.scene;
     HouseDoor.scale.x = 2.7;
