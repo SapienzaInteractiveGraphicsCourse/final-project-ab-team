@@ -8,17 +8,6 @@ const camera = new THREE.PerspectiveCamera(
 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-// let btn = document.createElement("button");
-
-// btn.innerHTML = "Subscribe";
-
-// btn.onclick = function () {
-
-// alert("Button is clicked");
-
-// };
-// document.body.appendChild(btn);
-
 document.body.appendChild(renderer.domElement);
 
 const light = new THREE.AmbientLight(0x404040, 8); 
@@ -1202,7 +1191,7 @@ if (flagSnowMan) {
   if(sumBalls == 80 ){
     particles.visible = true;
     updateParticles();
-    alert("It is starting to snow!")
+  
   if (generalFlag == true) {
     OldSnowMan.rotation.y += 0.027;
     OldSnowMan1.rotation.y += 0.027;
